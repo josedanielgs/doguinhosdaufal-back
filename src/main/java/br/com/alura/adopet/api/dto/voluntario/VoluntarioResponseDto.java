@@ -1,15 +1,15 @@
-package br.com.alura.adopet.api.dto;
+package br.com.alura.adopet.api.dto.voluntario;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import br.com.alura.adopet.api.model.PerfilUsuario;
-
-public record UsuarioResponseDto(
+public record VoluntarioResponseDto(
         UUID id,
         String nome,
+        String fotoUrl,
+        String descricao,
+        String telefone,
         String email,
-        PerfilUsuario perfil,
         Boolean ativo,
         LocalDateTime dataCriacao
 ) {

@@ -1,4 +1,4 @@
-package br.com.alura.adopet.api.dto;
+package br.com.alura.adopet.api.dto.usuario;
 
 import br.com.alura.adopet.api.model.PerfilUsuario;
 import jakarta.validation.constraints.Email;
