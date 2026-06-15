@@ -1,72 +1,131 @@
 package br.com.alura.adopet.api.service;
 
-import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
-import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
-import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
-import br.com.alura.adopet.api.model.Adocao;
-import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.model.Tutor;
-import br.com.alura.adopet.api.repository.AdocaoRepository;
-import br.com.alura.adopet.api.repository.PetRepository;
-import br.com.alura.adopet.api.repository.TutorRepository;
-import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
+import br.com.alura.adopet.api.dto.adocao.AdocaoMapper;
+import br.com.alura.adopet.api.dto.adocao.AdocaoResponseDto;
+import br.com.alura.adopet.api.dto.adocao.CreateAdocaoRequestDto;
+import br.com.alura.adopet.api.dto.adocao.UpdateAdocaoRequestDto;
+import br.com.alura.adopet.api.model.Adocao;
+import br.com.alura.adopet.api.model.Adotante;
+import br.com.alura.adopet.api.model.Animal;
+import br.com.alura.adopet.api.model.Ocorrencia;
+import br.com.alura.adopet.api.model.StatusAnimal;
+import br.com.alura.adopet.api.model.Usuario;
+import br.com.alura.adopet.api.repository.AdocaoRepository;
+import br.com.alura.adopet.api.repository.AdotanteRepository;
+import br.com.alura.adopet.api.repository.AnimalRepository;
+import br.com.alura.adopet.api.repository.OcorrenciaRepository;
+import br.com.alura.adopet.api.repository.UsuarioRepository;
+
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdocaoService {
 
-    @Autowired
-    private AdocaoRepository repository;
+    private final AdocaoRepository adocaoRepository;
+    private final AnimalRepository animalRepository;
+    private final AdotanteRepository adotanteRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final OcorrenciaRepository ocorrenciaRepository;
 
-    @Autowired
-    private PetRepository petRepository;
-
-    @Autowired
-    private TutorRepository tutorRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private List<ValidacaoSolicitacaoAdocao> validacoes;
-
-    public void solicitar(SolicitacaoAdocaoDto dto) {
-        Pet pet = petRepository.getReferenceById(dto.idPet());
-        Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
-
-        validacoes.forEach(v -> v.validar(dto));
-
-        Adocao adocao = new Adocao(tutor, pet, dto.motivo());
-        repository.save(adocao);
-
-        // emailService.enviarEmail(
-        //         adocao.getPet().getAbrigo().getEmail(),
-        //         "Solicitação de adoção",
-        //         "Olá " +adocao.getPet().getAbrigo().getNome() +"!\n\nUma solicitação de adoção foi registrada hoje para o pet: " +adocao.getPet().getNome() +". \nFavor avaliar para aprovação ou reprovação.");
+    public AdocaoService(
+            AdocaoRepository adocaoRepository,
+            AnimalRepository animalRepository,
+            AdotanteRepository adotanteRepository,
+            UsuarioRepository usuarioRepository,
+            OcorrenciaRepository ocorrenciaRepository
+    ) {
+        this.adocaoRepository = adocaoRepository;
+        this.animalRepository = animalRepository;
+        this.adotanteRepository = adotanteRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.ocorrenciaRepository = ocorrenciaRepository;
     }
 
-    public void aprovar(AprovacaoAdocaoDto dto) {
-        Adocao adocao = repository.getReferenceById(dto.idAdocao());
-        adocao.marcarComoAprovada();
+    @Transactional
+    public AdocaoResponseDto criar(CreateAdocaoRequestDto request) {
+        if (adocaoRepository.existsByAnimalId(request.animalId())) {
+            throw new IllegalArgumentException("Esse animal já possui adoção registrada.");
+        }
 
-        // emailService.enviarEmail(
-        //         adocao.getPet().getAbrigo().getEmail(),
-        //         "Adoção aprovada",
-        //         "Parabéns " +adocao.getTutor().getNome() +"!\n\nSua adoção do pet " +adocao.getPet().getNome() +", solicitada em " +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +", foi aprovada.\nFavor entrar em contato com o abrigo " +adocao.getPet().getAbrigo().getNome() +" para agendar a busca do seu pet.");
+        Animal animal = animalRepository.findById(request.animalId())
+                .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
+
+        Adotante adotante = adotanteRepository.findById(request.adotanteId())
+                .orElseThrow(() -> new IllegalArgumentException("Adotante não encontrado."));
+
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(request.ocorrenciaId())
+                .orElseThrow(() -> new IllegalArgumentException("Ocorrência não encontrada."));
+
+        Adocao adocao = AdocaoMapper.toEntity(request);
+        adocao.setAnimal(animal);
+        adocao.setAdotante(adotante);
+        adocao.setOcorrencia(ocorrencia);
+
+        if (request.criadoPorId() != null) {
+            Usuario usuario = usuarioRepository.findById(request.criadoPorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário criador não encontrado."));
+            adocao.setCriadoPor(usuario);
+        }
+
+        animal.setStatus(StatusAnimal.ADOTADO);
+
+        Adocao salva = adocaoRepository.save(adocao);
+        return AdocaoMapper.toResponse(salva);
     }
 
-    public void reprovar(ReprovacaoAdocaoDto dto) {
-        Adocao adocao = repository.getReferenceById(dto.idAdocao());
-        adocao.marcarComoReprovada(dto.justificativa());
+    @Transactional(readOnly = true)
+    public AdocaoResponseDto buscarPorId(UUID id) {
+        Adocao adocao = adocaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Adoção não encontrada."));
 
-        // emailService.enviarEmail(
-        //         adocao.getPet().getAbrigo().getEmail(),
-        //         "Solicitação de adoção",
-        //         "Olá " +adocao.getTutor().getNome() +"!\n\nInfelizmente sua adoção do pet " +adocao.getPet().getNome() +", solicitada em " +adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +", foi reprovada pelo abrigo " +adocao.getPet().getAbrigo().getNome() +" com a seguinte justificativa: " +adocao.getJustificativaStatus());
+        return AdocaoMapper.toResponse(adocao);
     }
 
+    @Transactional(readOnly = true)
+    public List<AdocaoResponseDto> listar() {
+        return adocaoRepository.findAll()
+                .stream()
+                .map(AdocaoMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public AdocaoResponseDto atualizar(UUID id, UpdateAdocaoRequestDto request) {
+        Adocao adocao = adocaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Adoção não encontrada."));
+
+        AdocaoMapper.updateEntity(adocao, request);
+
+        if (request.animalId() != null) {
+            Animal animal = animalRepository.findById(request.animalId())
+                    .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
+            adocao.setAnimal(animal);
+        }
+
+        if (request.adotanteId() != null) {
+            Adotante adotante = adotanteRepository.findById(request.adotanteId())
+                    .orElseThrow(() -> new IllegalArgumentException("Adotante não encontrado."));
+            adocao.setAdotante(adotante);
+        }
+
+        Adocao atualizada = adocaoRepository.save(adocao);
+        return AdocaoMapper.toResponse(atualizada);
+    }
+
+    @Transactional
+    public void deletar(UUID id) {
+        Adocao adocao = adocaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Adoção não encontrada."));
+
+        Animal animal = adocao.getAnimal();
+        if (animal != null && animal.getStatus() == StatusAnimal.ADOTADO) {
+            animal.setStatus(StatusAnimal.DISPONIVEL_ADOCAO);
+        }
+
+        adocaoRepository.delete(adocao);
+    }
 }

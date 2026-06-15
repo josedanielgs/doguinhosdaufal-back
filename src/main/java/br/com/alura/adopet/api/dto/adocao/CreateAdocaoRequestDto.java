@@ -18,6 +18,9 @@ public record CreateAdocaoRequestDto(
         @NotNull
         UUID adotanteId,
 
-        UUID criadoPorId
+        UUID criadoPorId,
+
+        @NotNull
+        UUID ocorrenciaId
 ) {
 }

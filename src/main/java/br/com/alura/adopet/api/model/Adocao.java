@@ -2,101 +2,115 @@ package br.com.alura.adopet.api.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "adocoes")
 public class Adocao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    private LocalDateTime data;
+    @Column(name = "data_adocao", nullable = false)
+    private LocalDate dataAdocao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tutor tutor;
+    @Column(name = "termo_url", length = 500)
+    private String termoUrl;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Pet pet;
+    @Column(columnDefinition = "TEXT")
+    private String observacoes;
 
-    private String motivo;
-
-    @Enumerated(EnumType.STRING)
-    private StatusAdocao status;
-
-    private String justificativaStatus;
+    @Column(name = "data_criacao", nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ocorrencia_id", nullable = false)
-    private Ocorrencia ocorrencia;
+    @JoinColumn(name = "animal_id", nullable = false, unique = true)
+    private Animal animal;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "adotante_id", nullable = false)
     private Adotante adotante;
 
-    public Adocao(Tutor tutor, Pet pet, String motivo) {
-        this.tutor = tutor;
-        this.pet = pet;
-        this.motivo = motivo;
-        this.status = StatusAdocao.AGUARDANDO_AVALIACAO;
-        this.data = LocalDateTime.now();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "criado_por_id")
+    private Usuario criadoPor;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ocorrencia_id", nullable = false)
+    private Ocorrencia ocorrencia;
+
+    public Adocao() {
     }
 
-    public Adocao(){}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Adocao adocao = (Adocao) o;
-        return Objects.equals(id, adocao.id);
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDateTime.now();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public LocalDateTime getData() {
-        return data;
+    public LocalDate getDataAdocao() {
+        return dataAdocao;
     }
 
-    public Tutor getTutor() {
-        return tutor;
+    public void setDataAdocao(LocalDate dataAdocao) {
+        this.dataAdocao = dataAdocao;
     }
 
-    public Pet getPet() {
-        return pet;
+    public String getTermoUrl() {
+        return termoUrl;
     }
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
+    public void setTermoUrl(String termoUrl) {
+        this.termoUrl = termoUrl;
     }
 
-    public String getMotivo() {
-        return motivo;
+    public String getObservacoes() {
+        return observacoes;
     }
 
-    public StatusAdocao getStatus() {
-        return status;
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 
-    public String getJustificativaStatus() {
-        return justificativaStatus;
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void marcarComoAprovada() {
-        this.status = StatusAdocao.APROVADO;
+    public Animal getAnimal() {
+        return animal;
     }
 
-    public void marcarComoReprovada(String justificativa) {
-        this.status = StatusAdocao.REPROVADO;
-        this.justificativaStatus = justificativa;
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    public Adotante getAdotante() {
+        return adotante;
+    }
+
+    public void setAdotante(Adotante adotante) {
+        this.adotante = adotante;
+    }
+
+    public Usuario getCriadoPor() {
+        return criadoPor;
+    }
+
+    public void setCriadoPor(Usuario criadoPor) {
+        this.criadoPor = criadoPor;
+    }
+
+    public Ocorrencia getOcorrencia() {
+        return ocorrencia;
+    }
+
+    public void setOcorrencia(Ocorrencia ocorrencia) {
+        this.ocorrencia = ocorrencia;
     }
 }
