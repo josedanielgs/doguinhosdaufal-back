@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,11 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -31,7 +34,7 @@ public class UsuarioService {
         Usuario usuario = UsuarioMapper.toEntity(request);
 
         // Exemplo simples. Em projeto real, aqui entraria passwordEncoder.encode(...)
-        usuario.setSenha("{noop}" + usuario.getSenha());
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         Usuario salvo = usuarioRepository.save(usuario);
         return UsuarioMapper.toResponse(salvo);
