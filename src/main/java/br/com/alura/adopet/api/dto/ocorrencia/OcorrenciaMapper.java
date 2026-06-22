@@ -37,6 +37,9 @@ public class OcorrenciaMapper {
         if (request.acoesResolucao() != null) {
             ocorrencia.setAcoesResolucao(request.acoesResolucao());
         }
+        if(request.anexos() != null) {
+            ocorrencia.setAnexos(request.anexos());
+        }
     }
 
     public static OcorrenciaResponseDto toResponse(Ocorrencia ocorrencia) {

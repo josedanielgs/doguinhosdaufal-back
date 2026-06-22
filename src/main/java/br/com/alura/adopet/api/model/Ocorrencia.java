@@ -57,6 +57,9 @@ public class Ocorrencia {
     @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Adocao> adocoes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Anexo> anexos = new ArrayList<>();
+
     public Ocorrencia() {
     }
 
@@ -161,5 +164,13 @@ public class Ocorrencia {
 
     public void setProcedimentos(List<Procedimento> procedimentos) {
         this.procedimentos = procedimentos;
+    }
+
+    public List<Anexo> getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(List<Anexo> anexos) {
+        this.anexos = anexos;
     }
 }

@@ -1,8 +1,10 @@
 package br.com.alura.adopet.api.dto.ocorrencia;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import br.com.alura.adopet.api.model.Anexo;
 import br.com.alura.adopet.api.model.TipoOcorrencia;
 
 public record UpdateOcorrenciaRequestDto(
@@ -13,6 +15,7 @@ public record UpdateOcorrenciaRequestDto(
         String acoesImediatas,
         String acoesResolucao,
         UUID animalId,
-        UUID responsavelId
+        UUID responsavelId,
+        List<Anexo> anexos
 ) {
 }

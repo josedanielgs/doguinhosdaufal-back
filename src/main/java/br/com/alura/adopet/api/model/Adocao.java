@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,9 +18,6 @@ public class Adocao {
 
     @Column(name = "data_adocao", nullable = false)
     private LocalDate dataAdocao;
-
-    @Column(name = "termo_url", length = 500)
-    private String termoUrl;
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
@@ -42,6 +41,9 @@ public class Adocao {
     @JoinColumn(name = "ocorrencia_id", nullable = false)
     private Ocorrencia ocorrencia;
 
+    @OneToMany(mappedBy = "adocao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Anexo> anexos = new ArrayList<>();
+
     public Adocao() {
     }
 
@@ -60,14 +62,6 @@ public class Adocao {
 
     public void setDataAdocao(LocalDate dataAdocao) {
         this.dataAdocao = dataAdocao;
-    }
-
-    public String getTermoUrl() {
-        return termoUrl;
-    }
-
-    public void setTermoUrl(String termoUrl) {
-        this.termoUrl = termoUrl;
     }
 
     public String getObservacoes() {
@@ -112,5 +106,13 @@ public class Adocao {
 
     public void setOcorrencia(Ocorrencia ocorrencia) {
         this.ocorrencia = ocorrencia;
+    }
+
+    public List<Anexo> getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(List<Anexo> anexos) {
+        this.anexos = anexos;
     }
 }

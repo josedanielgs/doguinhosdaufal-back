@@ -10,7 +10,6 @@ public class AdocaoMapper {
     public static Adocao toEntity(CreateAdocaoRequestDto request) {
         Adocao adocao = new Adocao();
         adocao.setDataAdocao(request.dataAdocao());
-        adocao.setTermoUrl(request.termoUrl());
         adocao.setObservacoes(request.observacoes());
         return adocao;
     }
@@ -19,11 +18,11 @@ public class AdocaoMapper {
         if (request.dataAdocao() != null) {
             adocao.setDataAdocao(request.dataAdocao());
         }
-        if (request.termoUrl() != null) {
-            adocao.setTermoUrl(request.termoUrl());
-        }
         if (request.observacoes() != null) {
             adocao.setObservacoes(request.observacoes());
+        }
+        if (request.anexos() != null) {
+            adocao.setAnexos(request.anexos());
         }
     }
 
@@ -31,7 +30,6 @@ public class AdocaoMapper {
         return new AdocaoResponseDto(
                 adocao.getId(),
                 adocao.getDataAdocao(),
-                adocao.getTermoUrl(),
                 adocao.getObservacoes(),
                 adocao.getAnimal() != null ? adocao.getAnimal().getId() : null,
                 adocao.getAdotante() != null ? adocao.getAdotante().getId() : null,

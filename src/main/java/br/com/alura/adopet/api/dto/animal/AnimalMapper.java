@@ -10,7 +10,6 @@ public class AnimalMapper {
     public static Animal toEntity(CreateAnimalRequestDto request) {
         Animal animal = new Animal();
         animal.setNome(request.nome());
-        animal.setFotoUrl(request.fotoUrl());
         animal.setSexo(request.sexo());
         animal.setEspecie(request.especie());
         animal.setRaca(request.raca());
@@ -24,9 +23,6 @@ public class AnimalMapper {
     public static void updateEntity(Animal animal, UpdateAnimalRequestDto request) {
         if (request.nome() != null) {
             animal.setNome(request.nome());
-        }
-        if (request.fotoUrl() != null) {
-            animal.setFotoUrl(request.fotoUrl());
         }
         if (request.sexo() != null) {
             animal.setSexo(request.sexo());
@@ -49,13 +45,15 @@ public class AnimalMapper {
         if (request.status() != null) {
             animal.setStatus(request.status());
         }
+        if(request.anexos() != null) {
+            animal.setAnexos(request.anexos());
+        }   
     }
 
     public static AnimalResponseDto toResponse(Animal animal) {
         return new AnimalResponseDto(
                 animal.getId(),
                 animal.getNome(),
-                animal.getFotoUrl(),
                 animal.getSexo(),
                 animal.getEspecie(),
                 animal.getRaca(),

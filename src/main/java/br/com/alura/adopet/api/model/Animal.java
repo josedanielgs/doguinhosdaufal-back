@@ -23,10 +23,6 @@ public class Animal {
     @Column(nullable = false, length = 120)
     private String nome;
 
-    @Size(max = 500)
-    @Column(name = "foto_url", length = 500)
-    private String fotoUrl;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private SexoAnimal sexo;
@@ -62,6 +58,9 @@ public class Animal {
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Anexo> anexos = new ArrayList<>();
+
     //@OneToOne(mappedBy = "animal", cascade = CascadeType.ALL)
     //private Adocao adocao;
 
@@ -93,14 +92,6 @@ public class Animal {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getFotoUrl() {
-        return fotoUrl;
-    }
-
-    public void setFotoUrl(String fotoUrl) {
-        this.fotoUrl = fotoUrl;
     }
 
     public SexoAnimal getSexo() {
@@ -177,6 +168,14 @@ public class Animal {
 
     public void setOcorrencias(List<Ocorrencia> ocorrencias) {
         this.ocorrencias = ocorrencias;
+    }
+
+    public List<Anexo> getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(List<Anexo> anexos) {
+        this.anexos = anexos;
     }
 
     /*public Adocao getAdocao() {

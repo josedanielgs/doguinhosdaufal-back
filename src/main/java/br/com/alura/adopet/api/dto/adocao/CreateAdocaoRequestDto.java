@@ -9,7 +9,6 @@ public record CreateAdocaoRequestDto(
         @NotNull
         LocalDate dataAdocao,
 
-        String termoUrl,
         String observacoes,
 
         @NotNull

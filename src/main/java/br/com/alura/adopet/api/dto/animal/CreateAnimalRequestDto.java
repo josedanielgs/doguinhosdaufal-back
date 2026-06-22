@@ -15,9 +15,6 @@ public record CreateAnimalRequestDto(
         @Size(max = 120)
         String nome,
 
-        @Size(max = 500)
-        String fotoUrl,
-
         @NotNull
         SexoAnimal sexo,
 

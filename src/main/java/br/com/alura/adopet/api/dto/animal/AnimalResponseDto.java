@@ -11,7 +11,6 @@ import br.com.alura.adopet.api.model.StatusAnimal;
 public record AnimalResponseDto(
         UUID id,
         String nome,
-        String fotoUrl,
         SexoAnimal sexo,
         EspecieAnimal especie,
         String raca,
