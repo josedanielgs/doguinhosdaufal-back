@@ -11,6 +11,7 @@ import br.com.alura.adopet.api.dto.login.LoginRequestDto;
 import br.com.alura.adopet.api.dto.login.LoginResponseDto;
 import br.com.alura.adopet.api.service.TokenService;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
