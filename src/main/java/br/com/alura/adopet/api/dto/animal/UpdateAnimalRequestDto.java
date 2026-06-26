@@ -10,6 +10,8 @@ import br.com.alura.adopet.api.model.Anexo;
 import br.com.alura.adopet.api.model.EspecieAnimal;
 import br.com.alura.adopet.api.model.SexoAnimal;
 import br.com.alura.adopet.api.model.StatusAnimal;
+import br.com.alura.adopet.api.model.PorteAnimal;
+import br.com.alura.adopet.api.model.PelagemAnimal;
 
 public record UpdateAnimalRequestDto(
         @Size(max = 120)
@@ -27,6 +29,10 @@ public record UpdateAnimalRequestDto(
         String descricao,
 
         Boolean castrado,
+
+        PorteAnimal porte,
+        
+        PelagemAnimal pelagem,
 
         StatusAnimal status,
 

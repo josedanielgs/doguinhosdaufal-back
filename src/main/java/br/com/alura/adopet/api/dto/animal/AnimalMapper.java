@@ -16,6 +16,7 @@ public class AnimalMapper {
         animal.setDataNascimento(request.dataNascimento());
         animal.setDescricao(request.descricao());
         animal.setCastrado(request.castrado() != null ? request.castrado() : false);
+        animal.setPorte(request.porte());
         animal.setStatus(request.status());
         return animal;
     }
@@ -42,6 +43,9 @@ public class AnimalMapper {
         if (request.castrado() != null) {
             animal.setCastrado(request.castrado());
         }
+        if (request.porte() != null) {
+            animal.setPorte(request.porte());
+        }
         if (request.status() != null) {
             animal.setStatus(request.status());
         }
@@ -56,6 +60,8 @@ public class AnimalMapper {
                 animal.getNome(),
                 animal.getSexo(),
                 animal.getEspecie(),
+                animal.getPorte(),
+                animal.getPelagem(),
                 animal.getRaca(),
                 animal.getDataNascimento(),
                 animal.getDescricao(),

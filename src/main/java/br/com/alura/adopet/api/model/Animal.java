@@ -31,6 +31,10 @@ public class Animal {
     @Column(nullable = false, length = 20)
     private EspecieAnimal especie;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private PelagemAnimal pelagem;
+
     @Size(max = 80)
     @Column(length = 80)
     private String raca;
@@ -47,6 +51,10 @@ public class Animal {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private StatusAnimal status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private PorteAnimal porte;
 
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
@@ -110,6 +118,14 @@ public class Animal {
         this.especie = especie;
     }
 
+    public PelagemAnimal getPelagem() {
+        return pelagem;
+    }
+
+    public void setPelagem(PelagemAnimal pelagem) {
+        this.pelagem = pelagem;
+    }
+
     public String getRaca() {
         return raca;
     }
@@ -140,6 +156,14 @@ public class Animal {
 
     public void setCastrado(Boolean castrado) {
         this.castrado = castrado;
+    }
+
+    public PorteAnimal getPorte() {
+        return porte;
+    }
+
+    public void setPorte(PorteAnimal porte) {
+        this.porte = porte;
     }
 
     public StatusAnimal getStatus() {
