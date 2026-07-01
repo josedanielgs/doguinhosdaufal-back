@@ -1,5 +1,7 @@
 package br.com.alura.adopet.api.dto.usuario;
 
+import java.time.LocalDateTime;
+
 import br.com.alura.adopet.api.model.PerfilUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +23,19 @@ public record CreateUsuarioRequestDto(
         String senha,
 
         @NotNull
-        PerfilUsuario perfil
+        PerfilUsuario perfil,
+
+        @Size(max = 500)
+        String fotoUrl,
+
+        String descricao,
+
+        @Size(max = 20)
+        String telefone,
+
+        LocalDateTime dataIngresso,
+
+        @Size(max = 120)
+        String curso
 ) {
 }

@@ -49,6 +49,14 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
+    public UsuarioResponseDto buscarPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+        return UsuarioMapper.toResponse(usuario);
+    }
+
+    @Transactional(readOnly = true)
     public List<UsuarioResponseDto> listar() {
         return usuarioRepository.findAll()
                 .stream()

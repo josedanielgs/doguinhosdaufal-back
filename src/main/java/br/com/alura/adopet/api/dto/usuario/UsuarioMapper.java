@@ -15,6 +15,11 @@ public class UsuarioMapper {
         usuario.setSenha(request.senha()); // depois o service criptografa
         usuario.setPerfil(request.perfil());
         usuario.setAtivo(true);
+        usuario.setFotoUrl(request.fotoUrl());
+        usuario.setDescricao(request.descricao());
+        usuario.setTelefone(request.telefone());
+        usuario.setDataIngresso(request.dataIngresso());
+        usuario.setCurso(request.curso());
         return usuario;
     }
 
@@ -34,6 +39,21 @@ public class UsuarioMapper {
         if (request.ativo() != null) {
             usuario.setAtivo(request.ativo());
         }
+        if (request.fotoUrl() != null) {
+            usuario.setFotoUrl(request.fotoUrl());
+        }
+        if (request.descricao() != null) {
+            usuario.setDescricao(request.descricao());
+        }
+        if (request.telefone() != null) {
+            usuario.setTelefone(request.telefone());
+        }
+        if (request.dataIngresso() != null) {
+            usuario.setDataIngresso(request.dataIngresso());
+        }
+        if (request.curso() != null) {
+            usuario.setCurso(request.curso());
+        }
     }
 
     public static UsuarioResponseDto toResponse(Usuario usuario) {
@@ -43,7 +63,12 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getPerfil(),
                 usuario.getAtivo(),
-                usuario.getDataCriacao()
+                usuario.getDataCriacao(),
+                usuario.getFotoUrl(),
+                usuario.getDescricao(),
+                usuario.getTelefone(),
+                usuario.getDataIngresso(),
+                usuario.getCurso()
         );
     }
 }

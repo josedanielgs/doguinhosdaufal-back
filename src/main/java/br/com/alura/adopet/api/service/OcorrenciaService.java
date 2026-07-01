@@ -10,11 +10,9 @@ import br.com.alura.adopet.api.dto.ocorrencia.UpdateOcorrenciaRequestDto;
 import br.com.alura.adopet.api.model.Animal;
 import br.com.alura.adopet.api.model.Ocorrencia;
 import br.com.alura.adopet.api.model.Usuario;
-import br.com.alura.adopet.api.model.Voluntario;
 import br.com.alura.adopet.api.repository.AnimalRepository;
 import br.com.alura.adopet.api.repository.OcorrenciaRepository;
 import br.com.alura.adopet.api.repository.UsuarioRepository;
-import br.com.alura.adopet.api.repository.VoluntarioRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,18 +22,15 @@ public class OcorrenciaService {
 
     private final OcorrenciaRepository ocorrenciaRepository;
     private final AnimalRepository animalRepository;
-    private final VoluntarioRepository voluntarioRepository;
     private final UsuarioRepository usuarioRepository;
 
     public OcorrenciaService(
             OcorrenciaRepository ocorrenciaRepository,
             AnimalRepository animalRepository,
-            VoluntarioRepository voluntarioRepository,
             UsuarioRepository usuarioRepository
     ) {
         this.ocorrenciaRepository = ocorrenciaRepository;
         this.animalRepository = animalRepository;
-        this.voluntarioRepository = voluntarioRepository;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -48,8 +43,8 @@ public class OcorrenciaService {
         ocorrencia.setAnimal(animal);
 
         if (request.responsavelId() != null) {
-            Voluntario responsavel = voluntarioRepository.findById(request.responsavelId())
-                    .orElseThrow(() -> new IllegalArgumentException("Voluntário responsável não encontrado."));
+            Usuario responsavel = usuarioRepository.findById(request.responsavelId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário responsável não encontrado."));
             ocorrencia.setResponsavel(responsavel);
         }
 
@@ -101,8 +96,8 @@ public class OcorrenciaService {
         }
 
         if (request.responsavelId() != null) {
-            Voluntario responsavel = voluntarioRepository.findById(request.responsavelId())
-                    .orElseThrow(() -> new IllegalArgumentException("Voluntário responsável não encontrado."));
+            Usuario responsavel = usuarioRepository.findById(request.responsavelId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário responsável não encontrado."));
             ocorrencia.setResponsavel(responsavel);
         }
 

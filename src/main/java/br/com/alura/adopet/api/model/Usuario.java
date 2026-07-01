@@ -42,6 +42,24 @@ public class Usuario {
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
+    @Size(max = 500)
+    @Column(name = "foto_url", length = 500)
+    private String fotoUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
+
+    @Size(max = 20)
+    @Column(length = 20)
+    private String telefone;
+
+    @Column(name = "data_ingresso")
+    private LocalDateTime dataIngresso;
+
+    @Size(max = 120)
+    @Column(length = 120)
+    private String curso;
+
     public Usuario() {
     }
 
@@ -96,5 +114,45 @@ public class Usuario {
 
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public LocalDateTime getDataIngresso() {
+        return dataIngresso;
+    }
+
+    public void setDataIngresso(LocalDateTime dataIngresso) {
+        this.dataIngresso = dataIngresso;
+    }
+
+    public String getCurso() {
+        return curso;
+    }
+
+    public void setCurso(String curso) {
+        this.curso = curso;
     }
 }

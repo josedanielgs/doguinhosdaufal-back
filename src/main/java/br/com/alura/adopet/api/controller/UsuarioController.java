@@ -2,6 +2,7 @@ package br.com.alura.adopet.api.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.alura.adopet.api.dto.usuario.CreateUsuarioRequestDto;
@@ -41,6 +42,13 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> listar() {
         List<UsuarioResponseDto> response = usuarioService.listar();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponseDto> buscarUsuarioAutenticado(Authentication authentication) {
+        String email = authentication.getName();
+        UsuarioResponseDto response = usuarioService.buscarPorEmail(email);
         return ResponseEntity.ok(response);
     }
 

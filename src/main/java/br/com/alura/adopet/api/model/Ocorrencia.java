@@ -45,7 +45,7 @@ public class Ocorrencia {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsavel_id")
-    private Voluntario responsavel;
+    private Usuario responsavel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criado_por_id")
@@ -142,11 +142,11 @@ public class Ocorrencia {
         this.animal = animal;
     }
 
-    public Voluntario getResponsavel() {
+    public Usuario getResponsavel() {
         return responsavel;
     }
 
-    public void setResponsavel(Voluntario responsavel) {
+    public void setResponsavel(Usuario responsavel) {
         this.responsavel = responsavel;
     }
 
